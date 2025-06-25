@@ -1,0 +1,114 @@
+Use GPU: cuda:0
+>>>>>>>start training : informer_GAZP_combo_2_ftM_sl180_ll50_pl5_dm512_nh8_el2_dl1_df1024_atprob_fc5_ebtimeF_dtTrue_mxTrue_exp_0>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+train 91045
+
+val 11399
+
+test 11401
+	iters: 100, epoch: 1 | loss: 0.0128822
+	speed: 0.4698s/iter; left time: 1785.7054s
+Epoch: 1 cost time: 59.437538146972656
+Epoch: 1, Steps: 130 | Train Loss: 0.1037148 Vali Loss: 0.1129374 Test Loss: 0.3640970
+Validation loss decreased (inf --> 0.112937).  Saving model ...
+Updating learning rate to 0.001
+	iters: 100, epoch: 2 | loss: 0.0087258
+	speed: 0.9026s/iter; left time: 3313.3338s
+Epoch: 2 cost time: 69.22847247123718
+Epoch: 2, Steps: 130 | Train Loss: 0.0101353 Vali Loss: 0.0855260 Test Loss: 0.2614200
+Validation loss decreased (0.112937 --> 0.085526).  Saving model ...
+Updating learning rate to 0.0005
+	iters: 100, epoch: 3 | loss: 0.0060452
+	speed: 0.9100s/iter; left time: 3222.4173s
+Epoch: 3 cost time: 67.14374208450317
+Epoch: 3, Steps: 130 | Train Loss: 0.0076343 Vali Loss: 0.0339465 Test Loss: 0.1406707
+Validation loss decreased (0.085526 --> 0.033947).  Saving model ...
+Updating learning rate to 0.00025
+	iters: 100, epoch: 4 | loss: 0.0056679
+	speed: 0.8827s/iter; left time: 3010.7620s
+Epoch: 4 cost time: 66.49806523323059
+Epoch: 4, Steps: 130 | Train Loss: 0.0063689 Vali Loss: 0.0299367 Test Loss: 0.1268535
+Validation loss decreased (0.033947 --> 0.029937).  Saving model ...
+Updating learning rate to 0.000125
+	iters: 100, epoch: 5 | loss: 0.0065039
+	speed: 0.8607s/iter; left time: 2824.0159s
+Epoch: 5 cost time: 63.65180206298828
+Epoch: 5, Steps: 130 | Train Loss: 0.0057487 Vali Loss: 0.0284385 Test Loss: 0.1350822
+Validation loss decreased (0.029937 --> 0.028439).  Saving model ...
+Updating learning rate to 6.25e-05
+	iters: 100, epoch: 6 | loss: 0.0048769
+	speed: 0.7662s/iter; left time: 2414.3675s
+Epoch: 6 cost time: 58.21690630912781
+Epoch: 6, Steps: 130 | Train Loss: 0.0054049 Vali Loss: 0.0294363 Test Loss: 0.1288574
+EarlyStopping counter: 1 out of 3
+Updating learning rate to 3.125e-05
+	iters: 100, epoch: 7 | loss: 0.0051815
+	speed: 0.7768s/iter; left time: 2346.5714s
+Epoch: 7 cost time: 56.8885498046875
+Epoch: 7, Steps: 130 | Train Loss: 0.0052294 Vali Loss: 0.0291749 Test Loss: 0.1317538
+EarlyStopping counter: 2 out of 3
+Updating learning rate to 1.5625e-05
+	iters: 100, epoch: 8 | loss: 0.0055306
+	speed: 0.9036s/iter; left time: 2612.3693s
+Epoch: 8 cost time: 69.05794715881348
+Epoch: 8, Steps: 130 | Train Loss: 0.0051470 Vali Loss: 0.0293819 Test Loss: 0.1269085
+EarlyStopping counter: 3 out of 3
+Early stopping
+>>>>>>>testing : informer_GAZP_combo_2_ftM_sl180_ll50_pl5_dm512_nh8_el2_dl1_df1024_atprob_fc5_ebtimeF_dtTrue_mxTrue_exp_0<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+test 11401
+test shape: (16, 700, 5, 6) (16, 700, 5, 6)
+test shape: (11200, 5, 6) (11200, 5, 6)
+mse:0.13449543714523315, mae:0.29165807366371155
+
+
+
+args = dotdict()
+
+args.model = 'informer' # model of experiment, options: [informer, informerstack, informerlight(TBD)]
+
+args.data = 'GAZP_combo_2' # data our data: NIFTY100_1m test data: ETTm1
+args.root_path = './ETDataset/ETT-small/' # root path of data file
+args.features = 'M' # forecasting task, options:[M, S, MS]; M:multivariate predict multivariate, S:univariate predict univariate, MS:multivariate predict univariate
+args.freq = 't' # freq for time features encoding, options:[s:secondly, t:minutely, h:hourly, d:daily, b:business days, w:weekly, m:monthly], you can also use more detailed freq like 15min or 3h
+args.checkpoints = './informer_checkpoints' # location of model checkpoints
+
+args.seq_len = 180 # input sequence length of Informer encoder
+args.label_len = 48 # start token length of Informer decoder
+args.pred_len = 5 # prediction sequence length
+# Informer decoder input: concat[start token series(label_len), zero padding series(pred_len)]
+
+args.factor = 5 # probsparse attn factor
+args.d_model = 512 # dimension of model
+args.n_heads = 4 # num of heads
+args.e_layers = 2 # num of encoder layers
+args.d_layers = 1 # num of decoder layers
+args.d_ff = 1024 # dimension of fcn in model
+args.dropout = 0.05 # dropout
+args.attn = 'prob' # attention used in encoder, options:[prob, full]
+args.embed = 'timeF' # time features encoding, options:[timeF, fixed, learned]
+args.activation = 'gelu' # activation
+args.distil = True # whether to use distilling in encoder
+args.output_attention = False # whether to output attention in ecoder
+args.mix = True
+args.padding = 0
+
+args.batch_size = 700 
+args.learning_rate = 0.001
+args.loss = 'mse'
+args.lradj = 'type1'
+args.use_amp = False # whether to use automatic mixed precision training
+
+args.num_workers = 0
+args.itr = 1
+args.train_epochs = 30
+args.patience = 3
+args.des = 'exp'
+
+args.use_gpu = True if torch.cuda.is_available() else False
+args.gpu = 0
+
+args.use_multi_gpu = False
+args.devices = '0,1,2,3'
+
+print(f"GPU in use: {args.use_gpu}")

@@ -1,0 +1,4 @@
+*.pdf
+Informer2020/utils/__pycache__
+results
+informer_checkpoints

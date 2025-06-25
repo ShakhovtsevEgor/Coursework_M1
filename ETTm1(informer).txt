@@ -1,0 +1,126 @@
+Use GPU: cuda:0
+>>>>>>>start training : informer_ETTm1_ftM_sl180_ll48_pl5_dm512_nh4_el2_dl1_df1024_atprob_fc10_ebtimeF_dtTrue_mxTrue_exp_0>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+train 55560
+
+val 6964
+
+test 6964
+	iters: 100, epoch: 1 | loss: 0.1153699
+	speed: 0.3425s/iter; left time: 1384.0073s
+Epoch: 1 cost time: 45.939656496047974
+Epoch: 1, Steps: 138 | Train Loss: 0.2081040 Vali Loss: 0.1303649 Test Loss: 0.1473155
+Validation loss decreased (inf --> 0.130365).  Saving model ...
+Updating learning rate to 0.0001
+	iters: 100, epoch: 2 | loss: 0.0795015
+	speed: 0.6156s/iter; left time: 2402.7018s
+Epoch: 2 cost time: 44.66612100601196
+Epoch: 2, Steps: 138 | Train Loss: 0.0901085 Vali Loss: 0.1123780 Test Loss: 0.1346495
+Validation loss decreased (0.130365 --> 0.112378).  Saving model ...
+Updating learning rate to 5e-05
+	iters: 100, epoch: 3 | loss: 0.0762265
+	speed: 0.6348s/iter; left time: 2390.1109s
+Epoch: 3 cost time: 48.05846285820007
+Epoch: 3, Steps: 138 | Train Loss: 0.0809722 Vali Loss: 0.1075111 Test Loss: 0.1360760
+Validation loss decreased (0.112378 --> 0.107511).  Saving model ...
+Updating learning rate to 2.5e-05
+	iters: 100, epoch: 4 | loss: 0.0737151
+	speed: 0.6642s/iter; left time: 2409.1183s
+Epoch: 4 cost time: 46.61375331878662
+Epoch: 4, Steps: 138 | Train Loss: 0.0777055 Vali Loss: 0.1030920 Test Loss: 0.1303119
+Validation loss decreased (0.107511 --> 0.103092).  Saving model ...
+Updating learning rate to 1.25e-05
+	iters: 100, epoch: 5 | loss: 0.0670640
+	speed: 0.6266s/iter; left time: 2186.3717s
+Epoch: 5 cost time: 45.28339910507202
+Epoch: 5, Steps: 138 | Train Loss: 0.0757942 Vali Loss: 0.1026038 Test Loss: 0.1296966
+Validation loss decreased (0.103092 --> 0.102604).  Saving model ...
+Updating learning rate to 6.25e-06
+	iters: 100, epoch: 6 | loss: 0.0727063
+	speed: 0.5908s/iter; left time: 1979.8533s
+Epoch: 6 cost time: 43.354656457901
+Epoch: 6, Steps: 138 | Train Loss: 0.0748194 Vali Loss: 0.1014911 Test Loss: 0.1308859
+Validation loss decreased (0.102604 --> 0.101491).  Saving model ...
+Updating learning rate to 3.125e-06
+	iters: 100, epoch: 7 | loss: 0.0819305
+	speed: 0.5679s/iter; left time: 1824.7576s
+Epoch: 7 cost time: 40.401098012924194
+Epoch: 7, Steps: 138 | Train Loss: 0.0743945 Vali Loss: 0.1003164 Test Loss: 0.1296018
+Validation loss decreased (0.101491 --> 0.100316).  Saving model ...
+Updating learning rate to 1.5625e-06
+	iters: 100, epoch: 8 | loss: 0.0735641
+	speed: 0.5410s/iter; left time: 1663.6915s
+Epoch: 8 cost time: 40.45300817489624
+Epoch: 8, Steps: 138 | Train Loss: 0.0740882 Vali Loss: 0.1014598 Test Loss: 0.1299608
+EarlyStopping counter: 1 out of 3
+Updating learning rate to 7.8125e-07
+	iters: 100, epoch: 9 | loss: 0.0748672
+	speed: 0.5376s/iter; left time: 1578.8808s
+Epoch: 9 cost time: 40.12571406364441
+Epoch: 9, Steps: 138 | Train Loss: 0.0738888 Vali Loss: 0.1012756 Test Loss: 0.1290298
+EarlyStopping counter: 2 out of 3
+Updating learning rate to 3.90625e-07
+	iters: 100, epoch: 10 | loss: 0.0671124
+	speed: 0.5404s/iter; left time: 1512.5445s
+Epoch: 10 cost time: 40.38561296463013
+Epoch: 10, Steps: 138 | Train Loss: 0.0738222 Vali Loss: 0.1016545 Test Loss: 0.1299888
+EarlyStopping counter: 3 out of 3
+Early stopping
+>>>>>>>testing : informer_ETTm1_ftM_sl180_ll48_pl5_dm512_nh4_el2_dl1_df1024_atprob_fc10_ebtimeF_dtTrue_mxTrue_exp_0<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+test 6964
+test shape: (17, 400, 5, 7) (17, 400, 5, 7)
+test shape: (6800, 5, 7) (6800, 5, 7)
+mse:0.12956450879573822, mae:0.22703395783901215
+
+
+args = dotdict()
+
+args.model = 'informer' # model of experiment, options: [informer, informerstack, informerlight(TBD)]
+
+args.data = 'ETTm1' # data our data: NIFTY100_1m test data: ETTm1
+args.root_path = './ETDataset/ETT-small/' # root path of data file
+args.features = 'M' # forecasting task, options:[M, S, MS]; M:multivariate predict multivariate, S:univariate predict univariate, MS:multivariate predict univariate
+args.freq = 't' # freq for time features encoding, options:[s:secondly, t:minutely, h:hourly, d:daily, b:business days, w:weekly, m:monthly], you can also use more detailed freq like 15min or 3h
+args.checkpoints = './informer_checkpoints' # location of model checkpoints
+
+args.seq_len = 180 # input sequence length of Informer encoder
+args.label_len = 48 # start token length of Informer decoder
+args.pred_len = 5 # prediction sequence length
+# Informer decoder input: concat[start token series(label_len), zero padding series(pred_len)]
+
+args.factor = 10 # probsparse attn factor
+args.d_model = 512 # dimension of model
+args.n_heads = 4 # num of heads
+args.e_layers = 2 # num of encoder layers
+args.d_layers = 1 # num of decoder layers
+args.d_ff = 1024 # dimension of fcn in model
+args.dropout = 0.05 # dropout
+args.attn = 'prob' # attention used in encoder, options:[prob, full]
+args.embed = 'timeF' # time features encoding, options:[timeF, fixed, learned]
+args.activation = 'gelu' # activation
+args.distil = True # whether to use distilling in encoder
+args.output_attention = True # whether to output attention in ecoder
+args.mix = True
+args.padding = 0
+
+args.batch_size = 400 
+args.learning_rate = 0.0001
+args.loss = 'mse'
+args.lradj = 'type1'
+args.use_amp = False # whether to use automatic mixed precision training
+
+args.num_workers = 0
+args.itr = 1
+args.train_epochs = 30
+args.patience = 3
+args.des = 'exp'
+
+args.use_gpu = True if torch.cuda.is_available() else False
+args.gpu = 0
+
+args.use_multi_gpu = False
+args.devices = '0,1,2,3'
+
+print(f"GPU in use: {args.use_gpu}")
+
